@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zyakka | Har Rasoi, Ek Pehchaan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zyakka: {
+                            maroon: '#5c0606', // Deep Maroon/Royal
+                            gold: '#C5B358', // Deep Champagne Gold
+                            cream: '#FFFDD0', // Soft Cream
+                            dark: '#2a0303', // Darker Maroon for contrast
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #5c0606;
+            /* Fallback */
+        }
+
+        .text-gold {
+            color: #C5B358;
+        }
+
+        .bg-gold {
+            background-color: #C5B358;
+        }
+
+        .border-gold {
+            border-color: #C5B358;
+        }
+
+        .card-hoverable {
+            transition: all 0.3s ease;
+        }
+
+        .card-hoverable:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px -10px rgba(197, 179, 88, 0.3);
+            border-color: #C5B358;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body class="bg-zyakka-maroon text-zyakka-cream antialiased">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-zyakka-maroon/95 backdrop-blur-md border-b border-zyakka-gold/20 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <img class="h-12 w-12 rounded-full border-2 border-zyakka-gold object-cover" src="assets/logo.jpg"
+                        alt="Zyakka Logo">
+                    <span class="text-2xl font-bold text-zyakka-gold tracking-wider">ZYAKKA</span>
+                </div>
+
+                <!-- Smart Location Header (Desktop) -->
+                <div class="hidden md:flex flex-1 max-w-lg mx-8">
+                    <div class="relative w-full flex items-center">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-location-dot text-zyakka-gold"></i>
+                        </div>
+                        <input type="text"
+                            class="block w-full pl-10 pr-32 py-2 border border-zyakka-gold/30 rounded-full leading-5 bg-zyakka-dark text-white placeholder-zyakka-cream/50 focus:outline-none focus:border-zyakka-gold focus:ring-1 focus:ring-zyakka-gold sm:text-sm transition-colors"
+                            placeholder="Enter your delivery location...">
+                        <button
+                            class="absolute right-1 top-1 bottom-1 px-4 bg-zyakka-gold text-zyakka-maroon font-semibold rounded-full text-xs hover:bg-white transition-colors flex items-center gap-1">
+                            <i class="fa-solid fa-crosshairs"></i> Detect
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center space-x-8">
+                        <a href="#kitchens"
+                            class="text-zyakka-cream hover:text-zyakka-gold transition-colors font-medium">Kitchens</a>
+                        <a href="#mission"
+                            class="text-zyakka-cream hover:text-zyakka-gold transition-colors font-medium">Our
+                            Mission</a>
+                        <button
+                            class="bg-transparent border border-zyakka-gold text-zyakka-gold hover:bg-zyakka-gold hover:text-zyakka-maroon px-6 py-2 rounded-full font-semibold transition-all duration-300">
+                            Login
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button"
+                        class="inline-flex items-center justify-center p-2 rounded-md text-zyakka-gold hover:text-white hover:bg-zyakka-dark focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Location Bar (Visible only on mobile) -->
+            <div class="md:hidden pb-4">
+                <div class="relative w-full flex items-center">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-location-dot text-zyakka-gold"></i>
+                    </div>
+                    <input type="text"
+                        class="block w-full pl-10 pr-24 py-2 border border-zyakka-gold/30 rounded-full leading-5 bg-zyakka-dark text-white placeholder-zyakka-cream/50 focus:outline-none focus:border-zyakka-gold focus:ring-1 focus:ring-zyakka-gold text-sm"
+                        placeholder="Search location...">
+                    <button
+                        class="absolute right-1 top-1 bottom-1 px-3 bg-zyakka-gold text-zyakka-maroon font-semibold rounded-full text-xs hover:bg-white transition-colors">
+                        Detect
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative bg-zyakka-maroon overflow-hidden">
+        <!-- Abstract Background Pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <svg class="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M0 100 C 20 0 50 0 100 100 Z" fill="#C5B358" />
+            </svg>
+        </div>
+
+        <div
+            class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 flex flex-col items-center text-center">
+            <div
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zyakka-dark border border-zyakka-gold/30 mb-8 backdrop-blur-sm animate-fade-in-up">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <span class="text-xs uppercase tracking-widest text-zyakka-gold font-semibold">Now Live in Dhanbad
+                    Sindri, Jharkhand</span>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6">
+                Har Rasoi, <br>
+                <span class="text-zyakka-gold italic">Ek Pehchaan.</span>
+            </h1>
+
+            <p class="mt-4 max-w-2xl text-xl text-zyakka-cream/80 font-light leading-relaxed">
+                Experience the authentic taste of home. We connect you with verified home kitchens and hidden culinary
+                treasures from the heart of India.
+            </p>
+
+            <div class="mt-10 flex flex-col sm:flex-row gap-4">
+                <a href="#kitchens"
+                    class="px-8 py-4 bg-zyakka-gold text-zyakka-maroon font-bold text-lg rounded-full hover:bg-white hover:scale-105 transition-all shadow-[0_0_20px_rgba(197,179,88,0.4)]">
+                    Explore Kitchens
+                </a>
+                <a href="#mission"
+                    class="px-8 py-4 bg-transparent border-2 border-zyakka-cream/30 text-zyakka-cream font-bold text-lg rounded-full hover:border-zyakka-gold hover:text-zyakka-gold transition-all">
+                    Our Story
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kitchen Marketplace Grid -->
+    <section id="kitchens" class="py-20 bg-zyakka-dark/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-2">Featured Home Kitchens</h2>
+                    <p class="text-zyakka-cream/60">Discover verified home chefs near you.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button
+                        class="px-4 py-2 bg-zyakka-gold text-zyakka-maroon rounded-full text-sm font-semibold">All</button>
+                    <button
+                        class="px-4 py-2 border border-zyakka-gold/30 text-zyakka-cream rounded-full text-sm hover:border-zyakka-gold hover:text-zyakka-gold transition-colors">Pure
+                        Veg</button>
+                    <button
+                        class="px-4 py-2 border border-zyakka-gold/30 text-zyakka-cream rounded-full text-sm hover:border-zyakka-gold hover:text-zyakka-gold transition-colors">Desserts</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div
+                    class="group bg-zyakka-maroon border border-zyakka-gold/20 rounded-2xl overflow-hidden card-hoverable cursor-pointer">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1556910103-1c02745a30bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                            alt="Kitchen"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div
+                            class="absolute top-4 right-4 bg-white/90 backdrop-blur text-zyakka-maroon text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                            <i class="fa-solid fa-certificate text-blue-500"></i> Verified
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                            <span class="text-white font-bold text-lg">Annapurna Rasoi</span>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <p class="text-zyakka-cream/70 text-sm line-clamp-2">Authentic Litti Chokha and Bihari
+                                cuisine made with traditional spices.</p>
+                            <div
+                                class="bg-zyakka-gold/10 px-2 py-1 rounded text-zyakka-gold text-xs font-bold whitespace-nowrap">
+                                <i class="fa-solid fa-star"></i> 4.8
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 mt-4 pt-4 border-t border-zyakka-gold/10">
+                            <div class="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <div class="text-xs">
+                                <p class="text-white font-medium">Chef Sunita Devi</p>
+                                <p class="text-zyakka-cream/50">Dhanbad, Jharkhand</p>
+                            </div>
+                            <button class="ml-auto text-zyakka-gold hover:underline text-sm font-medium">View
+                                Menu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div
+                    class="group bg-zyakka-maroon border border-zyakka-gold/20 rounded-2xl overflow-hidden card-hoverable cursor-pointer">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1626804475297-411db86d4c5c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                            alt="Kitchen"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div
+                            class="absolute top-4 right-4 bg-white/90 backdrop-blur text-zyakka-maroon text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                            <i class="fa-solid fa-certificate text-blue-500"></i> Verified
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                            <span class="text-white font-bold text-lg">Mom's Kitchen</span>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <p class="text-zyakka-cream/70 text-sm line-clamp-2">Specializing in homemade Thalis and
+                                Bengali Sweets.</p>
+                            <div
+                                class="bg-zyakka-gold/10 px-2 py-1 rounded text-zyakka-gold text-xs font-bold whitespace-nowrap">
+                                <i class="fa-solid fa-star"></i> 4.9
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 mt-4 pt-4 border-t border-zyakka-gold/10">
+                            <div class="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?auto=format&fit=crop&w=100&q=80"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <div class="text-xs">
+                                <p class="text-white font-medium">Mrs. Sunita Ghosh</p>
+                                <p class="text-zyakka-cream/50">Sindri, Jharkhand</p>
+                            </div>
+                            <button class="ml-auto text-zyakka-gold hover:underline text-sm font-medium">View
+                                Menu</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div
+                    class="group bg-zyakka-maroon border border-zyakka-gold/20 rounded-2xl overflow-hidden card-hoverable cursor-pointer">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                            alt="Kitchen"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div
+                            class="absolute top-4 right-4 bg-white/90 backdrop-blur text-zyakka-maroon text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                            <i class="fa-solid fa-certificate text-blue-500"></i> Verified
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                            <span class="text-white font-bold text-lg">Ranchi Flavours</span>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <p class="text-zyakka-cream/70 text-sm line-clamp-2">Sattu Paratha and spicy chicken curry.
+                            </p>
+                            <div
+                                class="bg-zyakka-gold/10 px-2 py-1 rounded text-zyakka-gold text-xs font-bold whitespace-nowrap">
+                                <i class="fa-solid fa-star"></i> 4.7
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 mt-4 pt-4 border-t border-zyakka-gold/10">
+                            <div class="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=100&q=80"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <div class="text-xs">
+                                <p class="text-white font-medium">Chef Anjali Singh</p>
+                                <p class="text-zyakka-cream/50">Jharia, Dhanbad</p>
+                            </div>
+                            <button class="ml-auto text-zyakka-gold hover:underline text-sm font-medium">View
+                                Menu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center">
+                <button
+                    class="px-8 py-3 border border-zyakka-gold text-zyakka-gold rounded-full font-semibold hover:bg-zyakka-gold hover:text-zyakka-maroon transition-all">
+                    View All Kitchens
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Impact Section -->
+    <section id="mission" class="py-20 bg-zyakka-maroon relative overflow-hidden">
+        <div class="absolute right-0 top-0 opacity-5 -mr-20 -mt-20">
+            <i class="fa-solid fa-hand-holding-heart text-9xl text-zyakka-gold"></i>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <!-- Left Column: Image -->
+                <div class="relative">
+                    <div class="absolute inset-0 bg-zyakka-gold rounded-3xl transform rotate-3 opacity-20"></div>
+                    <div class="relative rounded-3xl overflow-hidden border-2 border-zyakka-gold/30 shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1606914501449-119131edd0f0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+                            alt="Rural Kitchen Empowerment"
+                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
+                    </div>
+
+                    <!-- Floating Stat Card -->
+                    <div
+                        class="absolute -bottom-6 -right-6 bg-zyakka-dark p-6 rounded-xl border border-zyakka-gold/50 shadow-xl hidden md:block">
+                        <p class="text-zyakka-gold text-4xl font-bold">500+</p>
+                        <p class="text-white text-sm">Lives Empowered</p>
+                    </div>
+                </div>
+
+                <!-- Right Column: Content -->
+                <div class="space-y-6">
+                    <div class="inline-block px-3 py-1 bg-zyakka-gold/10 rounded-full border border-zyakka-gold/30">
+                        <span class="text-zyakka-gold text-xs font-bold uppercase tracking-wider">Beyond Delivery</span>
+                    </div>
+                    <h2 class="text-4xl lg:text-5xl font-bold text-white leading-tight">
+                        Empowering Every <span class="text-zyakka-gold">Kitchen.</span>
+                    </h2>
+
+                    <div class="space-y-4 text-zyakka-cream/80 text-lg leading-relaxed">
+                        <p>
+                            In the heart of rural India, every kitchen has a story and every recipe is a legacy.
+                            <span class="text-white font-medium">Zyakka</span> was born from a simple yet powerful
+                            vision: to bridge the gap between these hidden culinary treasures and the modern world.
+                        </p>
+                        <p>
+                            We are not just a delivery platform; we are an ecosystem built to empower rural
+                            entrepreneurs, specifically focusing on providing <span class="text-zyakka-gold">women in
+                                rural areas</span> the digital tools they need to share their identity with the country.
+                        </p>
+                        <p>
+                            By combining high-tech logistics with the authentic taste of home, we are ensuring that
+                            every kitchen—no matter how remote—gets the recognition it deserves.
+                        </p>
+                    </div>
+
+                    <div class="pt-6">
+                        <a href="#"
+                            class="inline-flex items-center gap-2 text-zyakka-gold font-bold hover:gap-3 transition-all">
+                            Join the Movement <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-zyakka-dark border-t border-zyakka-gold/10 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-3 mb-6">
+                        <img class="h-14 w-14 rounded-full border-2 border-zyakka-gold object-cover"
+                            src="assets/logo.jpg" alt="Zyakka Logo">
+                        <span class="text-3xl font-bold text-zyakka-gold tracking-wider">ZYAKKA</span>
+                    </div>
+                    <p class="text-zyakka-gold italic text-lg font-medium mb-4">"Har Rasoi, Ek Pehchaan"</p>
+                    <p class="text-zyakka-cream/50 text-sm">
+                        Connecting rural kitchens to urban tables. Empowering lives, one meal at a time.
+                    </p>
+                </div>
+
+                <div>
+                    <h3 class="text-white font-bold mb-6">Quick Links</h3>
+                    <ul class="space-y-3 text-zyakka-cream/60 text-sm">
+                        <li><a href="#" class="hover:text-zyakka-gold transition-colors">Home</a></li>
+                        <li><a href="#kitchens" class="hover:text-zyakka-gold transition-colors">Find Food</a></li>
+                        <li><a href="#mission" class="hover:text-zyakka-gold transition-colors">Our Mission</a></li>
+                        <li><a href="#" class="hover:text-zyakka-gold transition-colors">Partner With Us</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-white font-bold mb-6">Cities</h3>
+                    <ul class="space-y-3 text-zyakka-cream/60 text-sm">
+                        <li><a href="#" class="hover:text-zyakka-gold transition-colors">Dhanbad</a></li>
+                        <li><a href="#" class="hover:text-zyakka-gold transition-colors">Sindri</a></li>
+                        <li><a href="#" class="hover:text-zyakka-gold transition-colors">Jharia</a></li>
+                        <li><a href="#" class="hover:text-zyakka-gold transition-colors">Bokaro</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-white font-bold mb-6">Contact</h3>
+                    <ul class="space-y-3 text-zyakka-cream/60 text-sm">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-envelope text-zyakka-gold"></i>
+                            support@zyakka.com</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-phone text-zyakka-gold"></i> +91
+                            1800-ZYAKKA</li>
+                    </ul>
+                    <div class="flex gap-4 mt-6">
+                        <a href="#"
+                            class="w-8 h-8 rounded-full bg-zyakka-gold flex items-center justify-center text-zyakka-maroon hover:bg-white transition-colors"><i
+                                class="fa-brands fa-instagram"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 rounded-full bg-zyakka-gold flex items-center justify-center text-zyakka-maroon hover:bg-white transition-colors"><i
+                                class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 rounded-full bg-zyakka-gold flex items-center justify-center text-zyakka-maroon hover:bg-white transition-colors"><i
+                                class="fa-brands fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-zyakka-gold/10 pt-8 text-center">
+                <p class="text-zyakka-cream/30 text-xs">
+                    &copy; 2026 Zyakka Technologies Pvt. Ltd. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
