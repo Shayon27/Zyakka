@@ -1,0 +1,123 @@
+{
+  "theme": "light",
+  "archetype": "1_organic_earthy",
+  "design_philosophy": "E1: Emotion First. Breaking the 'fast-food' mold by treating food delivery like a premium, editorial dining experience. Using warm, earthy tones with high-end editorial typography to convey freshness and quality over cheap speed. Generous spacing and tactile surfaces replace chaotic, dense grids.",
+  "colors": {
+    "background": {
+      "primary": "#FAF7F2", 
+      "secondary": "#EFEBE4",
+      "tertiary": "#FFFFFF"
+    },
+    "text": {
+      "primary": "#2C2A28",
+      "secondary": "#6B655D",
+      "tertiary": "#A09A90",
+      "inverse": "#FFFFFF"
+    },
+    "brand": {
+      "primary": "#C65D47", 
+      "primary_hover": "#A64D3A",
+      "secondary": "#4A6B53",
+      "accent": "#E8B365"
+    },
+    "states": {
+      "success": "#4A6B53",
+      "warning": "#E8B365",
+      "error": "#B74134",
+      "veg": "#27AE60",
+      "non_veg": "#C0392B"
+    },
+    "surfaces": {
+      "card": "#FFFFFF",
+      "chat_bubble_user": "#C65D47",
+      "chat_bubble_kitchen": "#F3EFEA"
+    }
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Cormorant Garamond, serif",
+      "body": "Manrope, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scales": {
+      "h1": "text-4xl sm:text-5xl font-medium tracking-tight leading-none",
+      "h2": "text-2xl sm:text-3xl font-medium tracking-tight",
+      "h3": "text-xl sm:text-2xl font-medium",
+      "h4": "text-lg sm:text-xl font-semibold",
+      "body": "text-base leading-relaxed text-[#2C2A28]",
+      "body_small": "text-sm leading-relaxed text-[#6B655D]",
+      "label": "text-xs font-bold tracking-[0.2em] uppercase text-[#6B655D]"
+    }
+  },
+  "spacing_and_layout": {
+    "container_padding": "px-6 sm:px-8",
+    "section_gap": "gap-12 sm:gap-16",
+    "element_gap": "gap-4 sm:gap-6",
+    "border_radius": {
+      "small": "rounded-lg",
+      "medium": "rounded-2xl",
+      "large": "rounded-[2rem]",
+      "full": "rounded-full"
+    },
+    "card_padding": "p-6 sm:p-8"
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-[#C65D47] text-white rounded-full px-8 py-4 font-semibold hover:bg-[#A64D3A] transition-all flex items-center justify-center gap-2",
+      "secondary": "bg-[#EFEBE4] text-[#2C2A28] rounded-full px-8 py-4 font-semibold hover:bg-[#E4DFD6] transition-all flex items-center justify-center gap-2",
+      "outline": "border-2 border-[#EFEBE4] text-[#2C2A28] rounded-full px-8 py-4 font-semibold hover:border-[#C65D47] transition-all flex items-center justify-center gap-2",
+      "floating_action": "absolute bottom-6 right-6 w-14 h-14 bg-[#C65D47] text-white rounded-full shadow-lg flex items-center justify-center"
+    },
+    "cards": {
+      "restaurant_card": "bg-white rounded-[2rem] border border-black/5 overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.03)] flex flex-col transition-transform hover:-translate-y-1",
+      "tiffin_card": "bg-[#EFEBE4] rounded-[2rem] p-6 flex flex-col gap-4 border border-transparent hover:border-black/5",
+      "chat_bubble": "p-4 rounded-2xl max-w-[80%]"
+    },
+    "inputs": {
+      "default": "bg-[#F3EFEA] border-none rounded-2xl px-6 py-4 w-full text-base focus:ring-2 focus:ring-[#C65D47]/30 transition-all",
+      "search": "bg-white border border-black/5 rounded-full px-6 py-4 w-full shadow-sm pl-12 focus:ring-2 focus:ring-[#C65D47]/30"
+    },
+    "navigation": {
+      "bottom_tab": "bg-white/80 backdrop-blur-xl border-t border-black/5 pb-safe pt-4 px-6 flex justify-around items-center"
+    }
+  },
+  "visual_enhancers": {
+    "shadows": {
+      "subtle": "shadow-[0_4px_24px_rgba(0,0,0,0.02)]",
+      "elevated": "shadow-[0_12px_48px_rgba(0,0,0,0.06)]"
+    },
+    "glassmorphism": "backdrop-blur-xl bg-white/70 backdrop-saturate-150 border border-white/40",
+    "image_overlays": "bg-gradient-to-t from-black/60 via-black/20 to-transparent"
+  },
+  "icons": {
+    "library": "lucide-react",
+    "stroke_width": 1.5
+  },
+  "specific_flows": {
+    "home_discovery": "Use a 'Bento' grid style for the top section instead of standard carousels. Highlight one 'Hero' restaurant prominently.",
+    "zero_waste_toggle": "Must be visually distinct. Use the Moss Green (#4A6B53) color when active, with a smooth sliding animation and a leaf icon.",
+    "tiffin_subscription": "Horizontal scroll for 7-day view. Days should look like premium calendar date cells. High-quality closeups of the meal boxes.",
+    "direct_chat": "Clean, unbranded WhatsApp feel. Use off-white background with subtle noise texture for the chat area.",
+    "group_order": "Avatars of group members overlapping at the top. 'Add your items' button floating at bottom."
+  },
+  "media": {
+    "images": {
+      "hero_food": "https://images.pexels.com/photos/5865234/pexels-photo-5865234.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "restaurant_1": "https://images.unsplash.com/photo-1770816307454-892c27fc625e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHw0fHxyZXN0YXVyYW50JTIwaW50ZXJpb3IlMjB3YXJtJTIwbGlnaHR8ZW58MHx8fHwxNzc0NTE3NzQxfDA&ixlib=rb-4.1.0&q=85",
+      "restaurant_2": "https://images.pexels.com/photos/1855214/pexels-photo-1855214.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "tiffin_1": "https://images.pexels.com/photos/5560763/pexels-photo-5560763.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "tiffin_2": "https://images.unsplash.com/photo-1741376509680-9517d487689f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MTN8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjB0aWZmaW4lMjBtZWFsJTIwYm94JTIwaGVhbHRoeXxlbnwwfHx8fDE3NzQ1MTc3NDB8MA&ixlib=rb-4.1.0&q=85",
+      "food_1": "https://images.unsplash.com/photo-1678831654422-f4f8f22e0cd6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNDR8MHwxfHNlYXJjaHwyfHxnb3VybWV0JTIwZm9vZCUyMHBsYXRlJTIwdG9wJTIwdmlldyUyMG5hdHVyYWwlMjBsaWdodHxlbnwwfHx8fDE3NzQ1MTc3Mzl8MA&ixlib=rb-4.1.0&q=85",
+      "food_2": "https://images.pexels.com/photos/6607380/pexels-photo-6607380.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Use standard Tailwind classes mapped to React Native components (or Web components if simulating App via Next/React).",
+    "NEVER use plain cards for food items; utilize `rounded-[2rem]` with large border radii to make the app feel tactile and approachable.",
+    "Do not use generic stock avatars. If you need avatars, use a reliable generic image service, but prefer initial-based avatars for reliability.",
+    "Ensure all interactive elements have `data-testid` attributes.",
+    "Use `Cormorant Garamond` for headings. If implementing in React Native, ensure the font is loaded, or fallback to a serif font.",
+    "Implement the Zero-Waste packaging toggle prominently in the cart, making it feel rewarding (e.g., color shift).",
+    "For the Tiffin Subscription, make the 7-day/30-day selector massive and impossible to miss, utilizing horizontal scroll."
+  ]
+}
