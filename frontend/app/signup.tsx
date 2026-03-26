@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView,
-  Platform, ScrollView, ActivityIndicator,
+  Platform, ScrollView, ActivityIndicator, Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../contexts/AuthContext';
@@ -47,10 +47,11 @@ export default function SignupScreen() {
         </TouchableOpacity>
 
         <View style={styles.header}>
-          <View style={styles.logoRow}>
-            <View style={styles.logoDot} />
-            <Text style={styles.logoText}>Zyakka</Text>
-          </View>
+          <Image
+            source={require('../assets/images/zyakka-logo.jpg')}
+            style={styles.logoImg}
+            resizeMode="contain"
+          />
           <Text style={styles.title}>Create account</Text>
           <Text style={styles.subtitle}>Join thousands enjoying fresh, local meals daily</Text>
         </View>
@@ -131,9 +132,7 @@ const styles = StyleSheet.create({
   scrollContent: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 56, paddingBottom: 40 },
   backBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#EFEBE4', alignItems: 'center', justifyContent: 'center', marginBottom: 24 },
   header: { marginBottom: 32 },
-  logoRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 20 },
-  logoDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#C65D47' },
-  logoText: { fontSize: 18, fontWeight: '700', color: '#C65D47', letterSpacing: -0.5 },
+  logoImg: { width: 100, height: 100, alignSelf: 'flex-start', marginBottom: 8 },
   title: { fontSize: 32, fontWeight: '600', color: '#2C2A28', letterSpacing: -1 },
   subtitle: { fontSize: 15, color: '#6B655D', marginTop: 8, lineHeight: 22 },
   form: { gap: 18 },

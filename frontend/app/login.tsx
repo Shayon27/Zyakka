@@ -71,10 +71,11 @@ export default function LoginScreen() {
 
         {/* Header */}
         <View style={styles.header}>
-          <View style={styles.logoRow}>
-            <View style={styles.logoDot} />
-            <Text style={styles.logoText}>Zyakka</Text>
-          </View>
+          <Image
+            source={require('../assets/images/zyakka-logo.jpg')}
+            style={styles.logoImg}
+            resizeMode="contain"
+          />
           <Text style={styles.title}>Welcome back</Text>
           <Text style={styles.subtitle}>Sign in to continue ordering from your favorite kitchens</Text>
         </View>
@@ -212,9 +213,7 @@ const styles = StyleSheet.create({
   },
 
   header: { marginBottom: 36 },
-  logoRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 20 },
-  logoDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#C65D47' },
-  logoText: { fontSize: 18, fontWeight: '700', color: '#C65D47', letterSpacing: -0.5 },
+  logoImg: { width: 120, height: 120, alignSelf: 'flex-start', marginBottom: 12 },
   title: { fontSize: 32, fontWeight: '600', color: '#2C2A28', letterSpacing: -1 },
   subtitle: { fontSize: 15, color: '#6B655D', marginTop: 8, lineHeight: 22 },
 

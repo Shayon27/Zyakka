@@ -9,10 +9,14 @@ export default function RestaurantDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const [restaurant, setRestaurant] = useState<any>(null);
+  const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get(`/api/restaurants/${id}`).then(setRestaurant).catch(console.error).finally(() => setLoading(false));
+    Promise.all([
+      api.get(`/api/restaurants/${id}`).then(setRestaurant),
+      api.get(`/api/reviews/${id}`).then(setReviews).catch(() => setReviews([])),
+    ]).catch(console.error).finally(() => setLoading(false));
   }, [id]);
 
   const addToCart = async (item: any) => {
@@ -80,6 +84,32 @@ export default function RestaurantDetail() {
               ))}
             </View>
           ))}
+
+          {/* Reviews Section */}
+          {reviews.length > 0 && (
+            <View style={styles.reviewsSection}>
+              <Text style={styles.categoryTitle}>CUSTOMER REVIEWS ({reviews.length})</Text>
+              {reviews.slice(0, 5).map((review: any) => (
+                <View key={review.id} style={styles.reviewItem}>
+                  <View style={styles.reviewHeader}>
+                    <View style={styles.reviewAvatar}>
+                      <Text style={styles.reviewInitial}>{review.user_name?.charAt(0)}</Text>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.reviewerName}>{review.user_name}</Text>
+                      <View style={styles.reviewStars}>
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Ionicons key={star} name={star <= review.rating ? 'star' : 'star-outline'} size={12} color="#E8B365" />
+                        ))}
+                      </View>
+                    </View>
+                    <Text style={styles.reviewDate}>{new Date(review.created_at).toLocaleDateString()}</Text>
+                  </View>
+                  {review.comment ? <Text style={styles.reviewComment}>{review.comment}</Text> : null}
+                </View>
+              ))}
+            </View>
+          )}
         </View>
       </ScrollView>
 
@@ -127,4 +157,14 @@ const styles = StyleSheet.create({
   bottomBar: { paddingHorizontal: 24, paddingVertical: 12, backgroundColor: '#FAF7F2', borderTopWidth: 1, borderTopColor: '#EFEBE4' },
   viewCartBtn: { backgroundColor: '#C65D47', borderRadius: 100, paddingVertical: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
   viewCartText: { fontSize: 16, fontWeight: '700', color: '#FFF' },
+  // Reviews
+  reviewsSection: { marginTop: 24 },
+  reviewItem: { backgroundColor: '#FFF', borderRadius: 14, padding: 14, marginBottom: 10, borderWidth: 1, borderColor: 'rgba(0,0,0,0.04)' },
+  reviewHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 6 },
+  reviewAvatar: { width: 32, height: 32, borderRadius: 16, backgroundColor: '#EFEBE4', alignItems: 'center', justifyContent: 'center' },
+  reviewInitial: { fontSize: 14, fontWeight: '700', color: '#6B655D' },
+  reviewerName: { fontSize: 13, fontWeight: '600', color: '#2C2A28' },
+  reviewStars: { flexDirection: 'row', gap: 1, marginTop: 2 },
+  reviewDate: { fontSize: 11, color: '#A09A90' },
+  reviewComment: { fontSize: 13, color: '#6B655D', lineHeight: 18, marginTop: 2 },
 });

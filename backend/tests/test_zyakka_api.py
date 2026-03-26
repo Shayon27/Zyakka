@@ -1,6 +1,6 @@
 """
 Backend API tests for Zyakka food delivery platform
-Tests: Auth (register, login, demo accounts), Restaurants (list, filter, get by id), Cart (add, update, clear)
+Tests: Auth (register, login, demo accounts), Restaurants (list, filter, get by id), Cart (add, update, clear), Reviews (create, get by restaurant, get by order), Delivery Tracking
 """
 import pytest
 import requests
@@ -310,6 +310,233 @@ class TestCart:
         cart_data = get_response.json()
         assert cart_data["items"] == []
         print("✓ Cart cleared successfully")
+
+
+
+class TestReviews:
+    """Review & Rating endpoints - create review, get by restaurant, get by order"""
+    
+    @pytest.fixture
+    def auth_token_and_order(self):
+        """Create a test user, add items to cart, create order, and return auth token + order_id"""
+        unique_email = f"review_test_{uuid.uuid4().hex[:8]}@zyakka.com"
+        payload = {
+            "name": "Review Test User",
+            "email": unique_email,
+            "phone": "9876543210",
+            "password": "reviewtest123"
+        }
+        response = requests.post(f"{BASE_URL}/api/auth/register", json=payload)
+        token = response.json()["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+        
+        # Get a restaurant and menu item
+        restaurants = requests.get(f"{BASE_URL}/api/restaurants").json()
+        restaurant_id = restaurants[0]["id"]
+        restaurant_detail = requests.get(f"{BASE_URL}/api/restaurants/{restaurant_id}").json()
+        menu_item = restaurant_detail["menu"][0]
+        
+        # Add to cart
+        add_payload = {
+            "item_id": menu_item["id"],
+            "restaurant_id": restaurant_id,
+            "quantity": 1
+        }
+        requests.post(f"{BASE_URL}/api/cart/add", json=add_payload, headers=headers)
+        
+        # Create order
+        order_payload = {
+            "delivery_address": "123 Test Street",
+            "special_instructions": "Test order for review",
+            "zero_waste": False
+        }
+        order_response = requests.post(f"{BASE_URL}/api/orders", json=order_payload, headers=headers)
+        order_id = order_response.json()["id"]
+        
+        return {"token": token, "order_id": order_id, "restaurant_id": restaurant_id}
+    
+    def test_create_review(self, auth_token_and_order):
+        """Test POST /api/reviews creates a review with rating and comment"""
+        data = auth_token_and_order
+        headers = {"Authorization": f"Bearer {data['token']}"}
+        
+        review_payload = {
+            "restaurant_id": data["restaurant_id"],
+            "order_id": data["order_id"],
+            "rating": 5,
+            "comment": "Excellent food and service!"
+        }
+        response = requests.post(f"{BASE_URL}/api/reviews", json=review_payload, headers=headers)
+        assert response.status_code == 200, f"Review creation failed: {response.text}"
+        
+        review_data = response.json()
+        assert review_data["rating"] == 5
+        assert review_data["comment"] == "Excellent food and service!"
+        assert review_data["restaurant_id"] == data["restaurant_id"]
+        assert review_data["order_id"] == data["order_id"]
+        assert "id" in review_data
+        assert "user_name" in review_data
+        print(f"✓ Review created successfully: {review_data['rating']} stars")
+    
+    def test_create_review_invalid_rating(self, auth_token_and_order):
+        """Test POST /api/reviews with rating outside 1-5 range returns 400"""
+        data = auth_token_and_order
+        headers = {"Authorization": f"Bearer {data['token']}"}
+        
+        review_payload = {
+            "restaurant_id": data["restaurant_id"],
+            "order_id": data["order_id"],
+            "rating": 6,  # Invalid rating
+            "comment": "Test"
+        }
+        response = requests.post(f"{BASE_URL}/api/reviews", json=review_payload, headers=headers)
+        assert response.status_code == 400
+        assert "between 1 and 5" in response.json()["detail"].lower()
+        print("✓ Invalid rating (>5) rejected")
+    
+    def test_duplicate_review_rejected(self, auth_token_and_order):
+        """Test POST /api/reviews duplicate review for same order returns 400"""
+        data = auth_token_and_order
+        headers = {"Authorization": f"Bearer {data['token']}"}
+        
+        review_payload = {
+            "restaurant_id": data["restaurant_id"],
+            "order_id": data["order_id"],
+            "rating": 4,
+            "comment": "First review"
+        }
+        # First review
+        response1 = requests.post(f"{BASE_URL}/api/reviews", json=review_payload, headers=headers)
+        assert response1.status_code == 200
+        
+        # Duplicate review
+        response2 = requests.post(f"{BASE_URL}/api/reviews", json=review_payload, headers=headers)
+        assert response2.status_code == 400
+        assert "already reviewed" in response2.json()["detail"].lower()
+        print("✓ Duplicate review rejected")
+    
+    def test_get_reviews_by_restaurant(self):
+        """Test GET /api/reviews/{restaurant_id} returns reviews for a restaurant"""
+        # Get a restaurant ID
+        restaurants = requests.get(f"{BASE_URL}/api/restaurants").json()
+        restaurant_id = restaurants[0]["id"]
+        
+        response = requests.get(f"{BASE_URL}/api/reviews/{restaurant_id}")
+        assert response.status_code == 200
+        
+        reviews = response.json()
+        assert isinstance(reviews, list)
+        # Verify structure if reviews exist
+        if len(reviews) > 0:
+            review = reviews[0]
+            required_fields = ["id", "user_id", "user_name", "restaurant_id", "order_id", "rating", "comment", "created_at"]
+            for field in required_fields:
+                assert field in review, f"Missing field: {field}"
+            assert review["restaurant_id"] == restaurant_id
+            assert 1 <= review["rating"] <= 5
+        print(f"✓ Retrieved {len(reviews)} reviews for restaurant {restaurant_id}")
+    
+    def test_get_review_by_order(self, auth_token_and_order):
+        """Test GET /api/reviews/order/{order_id} returns user's review for an order"""
+        data = auth_token_and_order
+        headers = {"Authorization": f"Bearer {data['token']}"}
+        
+        # Create a review first
+        review_payload = {
+            "restaurant_id": data["restaurant_id"],
+            "order_id": data["order_id"],
+            "rating": 3,
+            "comment": "Good food"
+        }
+        requests.post(f"{BASE_URL}/api/reviews", json=review_payload, headers=headers)
+        
+        # Get review by order
+        response = requests.get(f"{BASE_URL}/api/reviews/order/{data['order_id']}", headers=headers)
+        assert response.status_code == 200
+        
+        review = response.json()
+        assert review["order_id"] == data["order_id"]
+        assert review["rating"] == 3
+        assert review["comment"] == "Good food"
+        print(f"✓ Retrieved review for order {data['order_id']}")
+
+
+class TestDeliveryTracking:
+    """Delivery tracking endpoints - track order with simulated GPS"""
+    
+    @pytest.fixture
+    def auth_token_and_order(self):
+        """Create a test user and order for tracking"""
+        unique_email = f"tracking_test_{uuid.uuid4().hex[:8]}@zyakka.com"
+        payload = {
+            "name": "Tracking Test User",
+            "email": unique_email,
+            "phone": "9876543210",
+            "password": "tracktest123"
+        }
+        response = requests.post(f"{BASE_URL}/api/auth/register", json=payload)
+        token = response.json()["access_token"]
+        headers = {"Authorization": f"Bearer {token}"}
+        
+        # Get a restaurant and menu item
+        restaurants = requests.get(f"{BASE_URL}/api/restaurants").json()
+        restaurant_id = restaurants[0]["id"]
+        restaurant_detail = requests.get(f"{BASE_URL}/api/restaurants/{restaurant_id}").json()
+        menu_item = restaurant_detail["menu"][0]
+        
+        # Add to cart
+        add_payload = {
+            "item_id": menu_item["id"],
+            "restaurant_id": restaurant_id,
+            "quantity": 1
+        }
+        requests.post(f"{BASE_URL}/api/cart/add", json=add_payload, headers=headers)
+        
+        # Create order
+        order_payload = {
+            "delivery_address": "456 Delivery Lane",
+            "special_instructions": "Test order for tracking",
+            "zero_waste": False
+        }
+        order_response = requests.post(f"{BASE_URL}/api/orders", json=order_payload, headers=headers)
+        order_id = order_response.json()["id"]
+        
+        return {"token": token, "order_id": order_id}
+    
+    def test_track_delivery_placed_status(self, auth_token_and_order):
+        """Test GET /api/delivery/track/{order_id} returns tracking data for placed order"""
+        data = auth_token_and_order
+        headers = {"Authorization": f"Bearer {data['token']}"}
+        
+        response = requests.get(f"{BASE_URL}/api/delivery/track/{data['order_id']}", headers=headers)
+        assert response.status_code == 200, f"Tracking failed: {response.text}"
+        
+        tracking = response.json()
+        assert tracking["order_id"] == data["order_id"]
+        assert tracking["status"] == "placed"
+        assert "restaurant" in tracking
+        assert "customer" in tracking
+        assert "delivery_partner" in tracking
+        
+        # Verify location structure
+        assert "lat" in tracking["restaurant"]
+        assert "lng" in tracking["restaurant"]
+        assert "lat" in tracking["customer"]
+        assert "lng" in tracking["customer"]
+        assert "lat" in tracking["delivery_partner"]
+        assert "lng" in tracking["delivery_partner"]
+        assert "heading" in tracking["delivery_partner"]
+        
+        print(f"✓ Tracking data retrieved for order {data['order_id']}: {tracking['delivery_partner']['heading']}")
+    
+    def test_track_delivery_nonexistent_order(self, auth_token_and_order):
+        """Test GET /api/delivery/track/{order_id} with invalid order returns 404"""
+        data = auth_token_and_order
+        headers = {"Authorization": f"Bearer {data['token']}"}
+        
+        response = requests.get(f"{BASE_URL}/api/delivery/track/invalid-order-id-12345", headers=headers)
+        assert response.status_code == 404
+        print("✓ 404 for nonexistent order tracking")
 
 
 if __name__ == "__main__":

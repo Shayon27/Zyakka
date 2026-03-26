@@ -100,6 +100,16 @@ class ProfileUpdate(BaseModel):
     name: Optional[str] = None
     phone: Optional[str] = None
 
+class ReviewCreate(BaseModel):
+    restaurant_id: str
+    order_id: str
+    rating: int  # 1-5
+    comment: str = ""
+
+class DeliveryLocationUpdate(BaseModel):
+    latitude: float
+    longitude: float
+
 # ── Auth Helpers ────────────────────────────────────────────────
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
@@ -859,6 +869,83 @@ async def admin_payouts(user=Depends(get_current_user)):
             "order_count": p["order_count"]
         })
     return result
+
+# ── Review & Rating Routes ──────────────────────────────────────
+@api_router.post("/reviews")
+async def create_review(data: ReviewCreate, user=Depends(get_current_user)):
+    if data.rating < 1 or data.rating > 5:
+        raise HTTPException(status_code=400, detail="Rating must be between 1 and 5")
+    existing = await db.reviews.find_one({"user_id": user["id"], "order_id": data.order_id}, {"_id": 0})
+    if existing:
+        raise HTTPException(status_code=400, detail="You already reviewed this order")
+    restaurant = await db.restaurants.find_one({"id": data.restaurant_id}, {"_id": 0})
+    if not restaurant:
+        raise HTTPException(status_code=404, detail="Restaurant not found")
+    review = {
+        "id": str(uuid.uuid4()), "user_id": user["id"], "user_name": user["name"],
+        "restaurant_id": data.restaurant_id, "order_id": data.order_id,
+        "rating": data.rating, "comment": data.comment,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.reviews.insert_one(review)
+    # Update restaurant average rating
+    all_reviews = await db.reviews.find({"restaurant_id": data.restaurant_id}, {"_id": 0}).to_list(1000)
+    avg_rating = round(sum(r["rating"] for r in all_reviews) / len(all_reviews), 1)
+    await db.restaurants.update_one({"id": data.restaurant_id}, {"$set": {"rating": avg_rating, "review_count": len(all_reviews)}})
+    return {k: v for k, v in review.items() if k != "_id"}
+
+@api_router.get("/reviews/{restaurant_id}")
+async def get_reviews(restaurant_id: str):
+    reviews = await db.reviews.find({"restaurant_id": restaurant_id}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return reviews
+
+@api_router.get("/reviews/order/{order_id}")
+async def get_order_review(order_id: str, user=Depends(get_current_user)):
+    review = await db.reviews.find_one({"order_id": order_id, "user_id": user["id"]}, {"_id": 0})
+    return review
+
+# ── Delivery Tracking Routes ───────────────────────────────────
+import random
+import math
+
+# Simulated delivery locations for tracking
+DELIVERY_ROUTES = {
+    "start": {"lat": 28.6139, "lng": 77.2090},  # Delhi center
+    "end": {"lat": 28.6280, "lng": 77.2180},     # Customer location
+}
+
+@api_router.get("/delivery/track/{order_id}")
+async def track_delivery(order_id: str, user=Depends(get_current_user)):
+    order = await db.orders.find_one({"id": order_id}, {"_id": 0})
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    status = order["status"]
+    # Simulate delivery location based on order status
+    if status == "placed" or status == "accepted":
+        location = {"lat": DELIVERY_ROUTES["start"]["lat"], "lng": DELIVERY_ROUTES["start"]["lng"], "heading": "At restaurant"}
+    elif status == "preparing":
+        location = {"lat": DELIVERY_ROUTES["start"]["lat"], "lng": DELIVERY_ROUTES["start"]["lng"], "heading": "Preparing at kitchen"}
+    elif status == "out_for_delivery":
+        # Simulate movement between start and end
+        progress = min(0.3 + random.random() * 0.5, 0.9)
+        lat = DELIVERY_ROUTES["start"]["lat"] + (DELIVERY_ROUTES["end"]["lat"] - DELIVERY_ROUTES["start"]["lat"]) * progress
+        lng = DELIVERY_ROUTES["start"]["lng"] + (DELIVERY_ROUTES["end"]["lng"] - DELIVERY_ROUTES["start"]["lng"]) * progress
+        lat += (random.random() - 0.5) * 0.002
+        lng += (random.random() - 0.5) * 0.002
+        remaining_km = round((1 - progress) * 3.2, 1)
+        eta_min = max(1, int(remaining_km * 4))
+        location = {"lat": round(lat, 6), "lng": round(lng, 6), "heading": f"On the way • {remaining_km} km away", "eta_minutes": eta_min, "progress": round(progress, 2)}
+    elif status == "delivered":
+        location = {"lat": DELIVERY_ROUTES["end"]["lat"], "lng": DELIVERY_ROUTES["end"]["lng"], "heading": "Delivered"}
+    else:
+        location = {"lat": DELIVERY_ROUTES["start"]["lat"], "lng": DELIVERY_ROUTES["start"]["lng"], "heading": "Waiting"}
+    return {
+        "order_id": order_id, "status": status,
+        "restaurant": {"name": order.get("restaurant_name"), "lat": DELIVERY_ROUTES["start"]["lat"], "lng": DELIVERY_ROUTES["start"]["lng"]},
+        "customer": {"lat": DELIVERY_ROUTES["end"]["lat"], "lng": DELIVERY_ROUTES["end"]["lng"]},
+        "delivery_partner": location,
+        "estimated_prep_time": order.get("estimated_prep_time")
+    }
 
 # ── Health Check ────────────────────────────────────────────────
 @api_router.get("/health")

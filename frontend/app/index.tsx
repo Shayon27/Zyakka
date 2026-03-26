@@ -26,8 +26,11 @@ export default function LandingPage() {
   if (loading || !ready) {
     return (
       <View style={styles.splashContainer} testID="splash-screen">
-        <Text style={styles.splashLogo}>Zyakka</Text>
-        <Text style={styles.splashTagline}>Fresh meals, delivered with care</Text>
+        <Image
+          source={require('../assets/images/zyakka-logo.jpg')}
+          style={styles.splashLogoImg}
+          resizeMode="contain"
+        />
       </View>
     );
   }
@@ -42,11 +45,11 @@ export default function LandingPage() {
         />
         <View style={styles.heroOverlay} />
         <View style={styles.heroContent}>
-          <View style={styles.logoBadge}>
-            <Ionicons name="leaf" size={18} color="#FFFFFF" />
-          </View>
-          <Text style={styles.heroLogo}>Zyakka</Text>
-          <Text style={styles.heroSubtitle}>The mindful way to eat</Text>
+          <Image
+            source={require('../assets/images/zyakka-logo.jpg')}
+            style={styles.heroLogoImg}
+            resizeMode="contain"
+          />
         </View>
       </View>
 
@@ -145,9 +148,8 @@ export default function LandingPage() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FAF7F2' },
   scrollContent: { flexGrow: 1 },
-  splashContainer: { flex: 1, backgroundColor: '#FAF7F2', alignItems: 'center', justifyContent: 'center' },
-  splashLogo: { fontSize: 52, fontWeight: '600', color: '#C65D47', letterSpacing: -2 },
-  splashTagline: { fontSize: 16, color: '#6B655D', marginTop: 8 },
+  splashContainer: { flex: 1, backgroundColor: '#FDF6E3', alignItems: 'center', justifyContent: 'center' },
+  splashLogoImg: { width: 220, height: 220 },
 
   // Hero
   heroSection: { height: height * 0.38, position: 'relative', overflow: 'hidden' },
@@ -157,14 +159,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.45)',
   },
   heroContent: {
-    position: 'absolute', bottom: 32, left: 24, right: 24,
+    position: 'absolute', bottom: 0, left: 0, right: 0, top: 0,
+    alignItems: 'center', justifyContent: 'center',
   },
-  logoBadge: {
-    width: 36, height: 36, borderRadius: 18, backgroundColor: '#4A6B53',
-    alignItems: 'center', justifyContent: 'center', marginBottom: 12,
-  },
-  heroLogo: { fontSize: 42, fontWeight: '600', color: '#FFFFFF', letterSpacing: -2 },
-  heroSubtitle: { fontSize: 16, color: 'rgba(255,255,255,0.85)', marginTop: 4 },
+  heroLogoImg: { width: 180, height: 180 },
 
   // Main
   mainContent: { paddingHorizontal: 24, paddingTop: 32, paddingBottom: 48 },
